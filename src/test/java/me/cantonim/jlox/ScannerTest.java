@@ -351,4 +351,141 @@ public class ScannerTest {
         }
     }
 
+    @Test
+    public void declarionsTest() {
+        int number_of_cases = 10;
+
+        Token results[][] = {
+            {
+                new Token(TokenType.VAR,"var", null ,1),
+                new Token(TokenType.IDENTIFIER,"foo", "foo" ,1),
+                new Token(TokenType.SEMICOLON,";", null ,1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.VAR,"var", null ,1),
+                new Token(TokenType.IDENTIFIER,"foo", "foo" ,1),
+                new Token(TokenType.EQUAL,"=",null,1),
+                new Token(TokenType.STRING,"\"baz\"","baz",1),
+                new Token(TokenType.SEMICOLON,";", null ,1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.VAR,"var", null ,1),
+                new Token(TokenType.IDENTIFIER,"bar", "bar" ,1),
+                new Token(TokenType.EQUAL,"=",null,1),
+                new Token(TokenType.NUMBER,"12",12d,1),
+                new Token(TokenType.SEMICOLON,";", null ,1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.VAR,"var", null ,1),
+                new Token(TokenType.IDENTIFIER,"baz", "baz" ,1),
+                new Token(TokenType.EQUAL,"=",null,1),
+                new Token(TokenType.NUMBER,"12.12",12.12d,1),
+                new Token(TokenType.SEMICOLON,";", null ,1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.VAR,"var", null ,1),
+                new Token(TokenType.IDENTIFIER,"boo", "boo" ,1),
+                new Token(TokenType.EQUAL,"=",null,1),
+                new Token(TokenType.TRUE,"true",null,1),
+                new Token(TokenType.SEMICOLON,";", null ,1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.VAR,"var", null ,1),
+                new Token(TokenType.IDENTIFIER,"boo", "boo" ,1),
+                new Token(TokenType.EQUAL,"=",null,1),
+                new Token(TokenType.FALSE,"false",null,1),
+                new Token(TokenType.SEMICOLON,";", null ,1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.VAR,"var", null ,1),
+                new Token(TokenType.IDENTIFIER,"foo", "foo" ,1),
+                new Token(TokenType.EQUAL,"=",null,1),
+                new Token(TokenType.LEFT_PAREN,"(",null,1),
+                new Token(TokenType.NUMBER,"25",25d,1),
+                new Token(TokenType.SLASH,"/",null,1),
+                new Token(TokenType.NUMBER,"5",5d,1),
+                new Token(TokenType.RIGHT_PAREN,")",null,1),
+                new Token(TokenType.SEMICOLON,";", null ,1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.VAR,"var", null ,1),
+                new Token(TokenType.IDENTIFIER,"foo", "foo" ,1),
+                new Token(TokenType.EQUAL,"=",null,1),
+                new Token(TokenType.STRING,"\"this is a \"","this is a ",1),
+                new Token(TokenType.PLUS,"+",null,1),
+                new Token(TokenType.STRING,"\"test\"","test",1),
+                new Token(TokenType.SEMICOLON,";", null ,1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.VAR,"var", null ,1),
+                new Token(TokenType.IDENTIFIER,"foo", "foo" ,1),
+                new Token(TokenType.EQUAL,"=",null,1),
+                new Token(TokenType.IDENTIFIER,"bar","bar",1),
+                new Token(TokenType.STAR,"*",null,1),
+                new Token(TokenType.IDENTIFIER,"baz","baz",1),
+                new Token(TokenType.SEMICOLON,";", null ,1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.VAR,"var", null ,1),
+                new Token(TokenType.IDENTIFIER,"bar", "bar" ,1),
+                new Token(TokenType.EQUAL,"=",null,1),
+                new Token(TokenType.NUMBER,"2",2d,2),
+                new Token(TokenType.SEMICOLON,";", null ,1),
+                new Token(TokenType.VAR,"var", null ,2),
+                new Token(TokenType.IDENTIFIER,"foo", "foo" ,2),
+                new Token(TokenType.EQUAL,"=",null,2),
+                new Token(TokenType.LEFT_PAREN,"(",null,2),
+                new Token(TokenType.NUMBER,"3.12",3.12d,2),
+                new Token(TokenType.STAR,"*",null,2),
+                new Token(TokenType.NUMBER,"8",8d,2),
+                new Token(TokenType.RIGHT_PAREN,")",null,2),
+                new Token(TokenType.SLASH,"/",null,2),
+                new Token(TokenType.IDENTIFIER,"bar", "bar" ,2),
+                new Token(TokenType.SEMICOLON,";", null ,2),
+                new Token(TokenType.EOF, "", null, 2)
+            },
+        };
+
+        String cases[] = {
+            "var foo;",
+            "var foo = \"baz\";",
+            "var bar = 12;",
+            "var baz = 12.12;",
+            "var boo = true;",
+            "var boo = false;",
+            "var foo = ( 25 / 5 );",
+            "var foo = \"this is a \" + \"test\";",
+            "var foo = bar * baz;",
+            "var bar = 2;\nvar foo = (3.12 * 8) / bar;"
+        };
+
+        for (int test_index = 0; test_index < number_of_cases; test_index++) {
+            List<Token> expect_result = Arrays.asList(results[test_index]);
+
+            Scanner scanner = new Scanner(cases[test_index]);
+            List<Token> tokens = scanner.scanTokens();
+
+            assertEquals(expect_result.size(), tokens.size());
+
+            for (int index = 0; index < expect_result.size(); index ++) {
+                Token expected = expect_result.get(index);
+                Token test = tokens.get(index);
+
+                assertTrue("Ensuring that neither of the test conditions are null", (expected != null && test != null));
+
+                assertEquals(expected.type, test.type);
+                assertEquals(expected.lexeme,test.lexeme);
+            }
+        }
+    }
+
 }
