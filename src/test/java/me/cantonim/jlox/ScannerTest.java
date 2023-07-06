@@ -115,4 +115,66 @@ public class ScannerTest {
         }
 
     }
+
+    /**
+     * A Test for the scanner to ensure that it can parse all of the relavent
+     * digit forms and ignore the invalid forms.
+     */
+    @Test
+    public void dualCharTest() {
+
+        int number_of_cases = 4;
+
+        Token results[][] = {
+            {
+                new Token(TokenType.EQUAL,"=", null ,1),
+                new Token(TokenType.BANG,"!", null ,1),
+                new Token(TokenType.BANG_EQUAL,"!=", null ,1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.EQUAL, "=", null, 1),
+                new Token(TokenType.EQUAL_EQUAL, "==", null, 1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.LESS, "<", null, 1),
+                new Token(TokenType.GREATER, ">", null, 1),
+                new Token(TokenType.LESS_EQUAL, "<=", null, 1),
+                new Token(TokenType.GREATER_EQUAL, ">=", null, 1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.SLASH, "/", null, 1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+        };
+
+        String cases[] = {
+            "=!!=",
+            "= ==",
+            "<> <= >=",
+            "/"
+        };
+
+        for (int test_index = 0; test_index < number_of_cases; test_index++) {
+            List<Token> expect_result = Arrays.asList(results[test_index]);
+
+            Scanner scanner = new Scanner(cases[test_index]);
+            List<Token> tokens = scanner.scanTokens();
+
+            assertEquals(expect_result.size(), tokens.size());
+
+            for (int index = 0; index < expect_result.size(); index ++) {
+                Token expected = expect_result.get(index);
+                Token test = tokens.get(index);
+
+                assertTrue("Ensuring that neither of the test conditions are null", (expected != null && test != null));
+
+                assertEquals(expected.type, test.type);
+                assertEquals(expected.lexeme,test.lexeme );
+            }
+        }
+
+    }
 }
