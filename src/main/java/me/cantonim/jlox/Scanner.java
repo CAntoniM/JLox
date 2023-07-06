@@ -64,8 +64,8 @@ public class Scanner {
     }
 
     private char peek( int ahead_by) {
-        if (isAtEnd() || current + ahead_by + 1 >= source.length()) return '\0';
-        return source.charAt(current);
+        if (isAtEnd() || current + ahead_by >= source.length()) return '\0';
+        return source.charAt(current+ahead_by);
     }
 
     private char peek() {
