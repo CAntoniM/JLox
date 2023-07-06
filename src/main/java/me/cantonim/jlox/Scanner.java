@@ -9,7 +9,7 @@ public class Scanner {
     private int line = 1;
     private int start = 0;
     private int current = 0;
-
+    private static final int next=1;
 
     public Scanner(String source) {
         this.source = source;
@@ -39,9 +39,13 @@ public class Scanner {
         return true;
     }
 
-    private char peek() {
-        if (isAtEnd()) return '\0';
+    private char peek( int ahead_by) {
+        if (isAtEnd() || current + ahead_by + 1 >= source.length()) return '\0';
         return source.charAt(current);
+    }
+
+    private char peek() {
+        return peek(0);
     }
 
     private void string() {
@@ -58,6 +62,22 @@ public class Scanner {
         advance();
         String value = source.substring(start + 1, current -1 );
         addToken(TokenType.STRING, value);
+    }
+
+    private boolean isDigit(char c) {
+        return c >= '0' && c <= '9';
+    }
+
+    private void number() {
+        while(isDigit(peek())) advance();
+
+        if (peek() == '.' && isDigit(peek(next))) {
+            advance();
+        }
+
+        while(isDigit(peek())) advance();
+
+        addToken(TokenType.NUMBER,source.substring(start, current));
     }
 
     private void scanToken() {
@@ -110,7 +130,11 @@ public class Scanner {
                 break;
             //error
             default:
-                JLox.error(line, "Unexpected character.");
+                if (isDigit(c)) {
+                    number();
+                }else {
+                    JLox.error(line, "Unexpected character.");
+                }
                 break;
         }
     }
