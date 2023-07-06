@@ -3,7 +3,6 @@ package me.cantonim.jlox;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -178,7 +177,7 @@ public class ScannerTest {
 
     @Test
     public void keywordsTest() {
-        int number_of_cases = 4;
+        int number_of_cases = 17;
 
         Token results[][] = {
             {
@@ -250,11 +249,12 @@ public class ScannerTest {
                 new Token(TokenType.VAR, "var", null, 1),
                 new Token(TokenType.TRUE, "true", null, 1),
                 new Token(TokenType.THIS, "this", null, 1),
+                new Token(TokenType.SUPER, "super", null, 1),
                 new Token(TokenType.RETURN, "return", null, 1),
                 new Token(TokenType.PRINT, "print", null, 1),
                 new Token(TokenType.OR, "or", null, 1),
-                new Token(TokenType.IF, "if", null, 1),
                 new Token(TokenType.NIL, "nil", null, 1),
+                new Token(TokenType.IF, "if", null, 1),
                 new Token(TokenType.FUN, "fun", null, 1),
                 new Token(TokenType.FOR, "for", null, 1),
                 new Token(TokenType.FALSE, "false", null, 1),
@@ -304,4 +304,51 @@ public class ScannerTest {
             }
         }
     }
+
+    @Test
+    public void stringTest() {
+        int number_of_cases = 3;
+
+        Token results[][] = {
+            {
+                new Token(TokenType.STRING,"\"test\"", "test" ,1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.STRING,"\"This is a test\n foo bar\"","This is a test\n foo bar" ,1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.STRING,"\"test\"", "test" ,1),
+                new Token(TokenType.STRING,"\"test\"", "test" ,1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+        };
+
+        String cases[] = {
+            "\"test\"",
+            "\"This is a test\n foo bar\"",
+            "\"test\" \"test\"",
+        };
+
+        for (int test_index = 0; test_index < number_of_cases; test_index++) {
+            List<Token> expect_result = Arrays.asList(results[test_index]);
+
+            Scanner scanner = new Scanner(cases[test_index]);
+            List<Token> tokens = scanner.scanTokens();
+
+            assertEquals(expect_result.size(), tokens.size());
+
+            for (int index = 0; index < expect_result.size(); index ++) {
+                Token expected = expect_result.get(index);
+                Token test = tokens.get(index);
+
+                assertTrue("Ensuring that neither of the test conditions are null", (expected != null && test != null));
+
+                assertEquals(expected.type, test.type);
+                assertEquals(expected.lexeme,test.lexeme);
+            }
+        }
+    }
+
 }
