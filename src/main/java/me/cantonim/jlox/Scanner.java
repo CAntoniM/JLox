@@ -1,7 +1,9 @@
 package me.cantonim.jlox;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Scanner {
     private final String source;
@@ -10,6 +12,28 @@ public class Scanner {
     private int start = 0;
     private int current = 0;
     private static final int next=1;
+    private static final Map<String,TokenType> keywords;
+
+    static {
+        keywords = new HashMap<>();
+        keywords.put("and", TokenType.AND);
+        keywords.put("class",TokenType.CLASS);
+        keywords.put("else",TokenType.ELSE);
+        keywords.put("false",TokenType.FALSE);
+        keywords.put("for",TokenType.FOR);
+        keywords.put("fun",TokenType.FUN);
+        keywords.put("if",TokenType.IF);
+        keywords.put("nil",TokenType.NIL);
+        keywords.put("or",TokenType.OR);
+        keywords.put("print",TokenType.PRINT);
+        keywords.put("return",TokenType.RETURN);
+        keywords.put("super",TokenType.SUPER);
+        keywords.put("this",TokenType.THIS);
+        keywords.put("true",TokenType.TRUE);
+        keywords.put("var",TokenType.VAR);
+        keywords.put("while",TokenType.WHILE);
+    }
+
 
     public Scanner(String source) {
         this.source = source;
@@ -77,7 +101,28 @@ public class Scanner {
 
         while(isDigit(peek())) advance();
 
-        addToken(TokenType.NUMBER,source.substring(start, current));
+        addToken(TokenType.NUMBER,
+            Double.parseDouble(
+                source.substring(start, current)
+            )
+        );
+    }
+
+    private boolean isAlpha (char c) {
+        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+    }
+
+    private void identifier() {
+        char current_char = peek();
+
+        while (isDigit(current_char) || isAlpha(current_char)) advance();
+
+        String text = source.substring(start,current);
+        TokenType type = keywords.get(text);
+
+        if (type == null) type = TokenType.IDENTIFIER;
+
+        addToken(type);
     }
 
     private void scanToken() {
@@ -132,6 +177,8 @@ public class Scanner {
             default:
                 if (isDigit(c)) {
                     number();
+                } else if (isAlpha(c)) {
+                    identifier();
                 }else {
                     JLox.error(line, "Unexpected character.");
                 }
