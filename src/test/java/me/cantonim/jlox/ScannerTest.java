@@ -67,8 +67,7 @@ public class ScannerTest {
     }
 
     /**
-     * A Test for the scanner to ensure that it can parse all of the relavent
-     * digit forms and ignore the invalid forms.
+     * A Test for the scanner to ensure that it can parse all of the relavent single digit tokens.
      */
     @Test
     public void singleCharTest() {
@@ -117,8 +116,7 @@ public class ScannerTest {
     }
 
     /**
-     * A Test for the scanner to ensure that it can parse all of the relavent
-     * digit forms and ignore the invalid forms.
+     * A Test for the scanner to ensure that it can parse all of the tokens that can be a single or dual char tokens
      */
     @Test
     public void dualCharTest() {
@@ -176,5 +174,134 @@ public class ScannerTest {
             }
         }
 
+    }
+
+    @Test
+    public void keywordsTest() {
+        int number_of_cases = 4;
+
+        Token results[][] = {
+            {
+                new Token(TokenType.AND, "and", null, 1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.CLASS, "class", null, 1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.ELSE, "else", null, 1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.FALSE, "false", null, 1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.FOR, "for", null, 1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.FUN, "fun", null, 1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.IF, "if", null, 1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.NIL, "nil", null, 1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.OR, "or", null, 1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.PRINT, "print", null, 1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.RETURN, "return", null, 1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.SUPER, "super", null, 1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.THIS, "this", null, 1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.TRUE, "true", null, 1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.VAR, "var", null, 1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.WHILE, "while", null, 1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+            {
+                new Token(TokenType.WHILE, "while", null, 1),
+                new Token(TokenType.VAR, "var", null, 1),
+                new Token(TokenType.TRUE, "true", null, 1),
+                new Token(TokenType.THIS, "this", null, 1),
+                new Token(TokenType.RETURN, "return", null, 1),
+                new Token(TokenType.PRINT, "print", null, 1),
+                new Token(TokenType.OR, "or", null, 1),
+                new Token(TokenType.IF, "if", null, 1),
+                new Token(TokenType.NIL, "nil", null, 1),
+                new Token(TokenType.FUN, "fun", null, 1),
+                new Token(TokenType.FOR, "for", null, 1),
+                new Token(TokenType.FALSE, "false", null, 1),
+                new Token(TokenType.ELSE, "else", null, 1),
+                new Token(TokenType.CLASS, "class", null, 1),
+                new Token(TokenType.AND, "and", null, 1),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+        };
+
+        String cases[] = {
+            "and",
+            "class",
+            "else",
+            "false",
+            "for",
+            "fun",
+            "if",
+            "nil",
+            "or",
+            "print",
+            "return",
+            "super",
+            "this",
+            "true",
+            "var",
+            "while",
+            "while var true this super return print or nil if fun for false else class and"
+        };
+
+        for (int test_index = 0; test_index < number_of_cases; test_index++) {
+            List<Token> expect_result = Arrays.asList(results[test_index]);
+
+            Scanner scanner = new Scanner(cases[test_index]);
+            List<Token> tokens = scanner.scanTokens();
+
+            assertEquals(expect_result.size(), tokens.size());
+
+            for (int index = 0; index < expect_result.size(); index ++) {
+                Token expected = expect_result.get(index);
+                Token test = tokens.get(index);
+
+                assertTrue("Ensuring that neither of the test conditions are null", (expected != null && test != null));
+
+                assertEquals(expected.type, test.type);
+                assertEquals(expected.lexeme,test.lexeme );
+            }
+        }
     }
 }
