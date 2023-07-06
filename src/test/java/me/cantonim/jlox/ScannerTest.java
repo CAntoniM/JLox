@@ -488,4 +488,109 @@ public class ScannerTest {
         }
     }
 
+
+    /**
+     * Adding a test for the scanning of the functions
+     */
+    @Test
+    public void functionsTest() {
+
+        int number_of_cases = 1;
+
+        Token results[][] = {
+            {
+                new Token(TokenType.FUN,"fun", null ,1),
+                new Token(TokenType.IDENTIFIER,"foo", "foo" ,1),
+                new Token(TokenType.LEFT_PAREN,"(", null ,1),
+                new Token(TokenType.IDENTIFIER,"bar", "bar" ,1),
+                new Token(TokenType.COMMA,",", null ,1),
+                new Token(TokenType.IDENTIFIER,"baz", "baz" ,1),
+                new Token(TokenType.RIGHT_PAREN,")", null ,1),
+                new Token(TokenType.LEFT_BRACE,"{", null ,1),
+                new Token(TokenType.RETURN,"return", null ,2),
+                new Token(TokenType.IDENTIFIER,"bar", "bar" ,2),
+                new Token(TokenType.PLUS,"+", null ,2),
+                new Token(TokenType.IDENTIFIER,"baz", "baz" ,2),
+                new Token(TokenType.SEMICOLON,";",null ,2),
+                new Token(TokenType.RIGHT_BRACE,"}", null ,3),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+        };
+
+        String cases[] = {
+            "fun foo(bar, baz) {\n\treturn bar + baz; \n}",
+        };
+
+        for (int test_index = 0; test_index < number_of_cases; test_index++) {
+            List<Token> expect_result = Arrays.asList(results[test_index]);
+
+            Scanner scanner = new Scanner(cases[test_index]);
+            List<Token> tokens = scanner.scanTokens();
+
+            assertEquals(expect_result.size(), tokens.size());
+
+            for (int index = 0; index < expect_result.size(); index ++) {
+                Token expected = expect_result.get(index);
+                Token test = tokens.get(index);
+
+                assertTrue("Ensuring that neither of the test conditions are null", (expected != null && test != null));
+
+                assertEquals(expected.type, test.type);
+                assertEquals(expected.lexeme,test.lexeme );
+            }
+        }
+
+    }
+
+        /**
+     * A Test for the scanning of classes to ensure that the tokens are correctly interpreted
+     */
+    @Test
+    public void classesTest() {
+
+        int number_of_cases = 1;
+
+        Token results[][] = {
+            {
+                new Token(TokenType.CLASS,"class", null ,1),
+                new Token(TokenType.IDENTIFIER,"foo", "foo" ,1),
+                new Token(TokenType.LEFT_BRACE,"{", null ,1),
+                new Token(TokenType.IDENTIFIER,"bar", "bar" ,2),
+                new Token(TokenType.LEFT_PAREN,"(", null ,2),
+                new Token(TokenType.IDENTIFIER,"a", "a" ,2),
+                new Token(TokenType.RIGHT_PAREN,")", null ,2),
+                new Token(TokenType.LEFT_BRACE,"{", null ,2),
+                new Token(TokenType.PRINT,"print", null ,3),
+                new Token(TokenType.IDENTIFIER,"a", "a" ,3),
+                new Token(TokenType.SEMICOLON,";",null ,3),
+                new Token(TokenType.RIGHT_BRACE,"}", null ,4),
+                new Token(TokenType.RIGHT_BRACE,"}", null ,5),
+                new Token(TokenType.EOF, "", null, 1)
+            },
+        };
+
+        String cases[] = {
+            "class foo {\n\tbar (a) {\n\t\tprint a;\n\t}\n}",
+        };
+
+        for (int test_index = 0; test_index < number_of_cases; test_index++) {
+            List<Token> expect_result = Arrays.asList(results[test_index]);
+
+            Scanner scanner = new Scanner(cases[test_index]);
+            List<Token> tokens = scanner.scanTokens();
+
+            assertEquals(expect_result.size(), tokens.size());
+
+            for (int index = 0; index < expect_result.size(); index ++) {
+                Token expected = expect_result.get(index);
+                Token test = tokens.get(index);
+
+                assertTrue("Ensuring that neither of the test conditions are null", (expected != null && test != null));
+
+                assertEquals(expected.type, test.type);
+                assertEquals(expected.lexeme,test.lexeme );
+            }
+        }
+
+    }
 }
