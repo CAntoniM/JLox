@@ -28,10 +28,15 @@ number = digit , [ "." , digit , { digit } ];
 string = "\"" , {digit | alpha | symbol } , "\"";
 litteral = number | string | "true" | "false" | "nil" ;
 
-expression = litteral | unary | binary | grouping;
+expression = eqaulity;
+equality = comparision, { ("!=" | "==" ) , comparison };
+comparison = term, { ( ">" | ">=" | "<" | "<=" ) term };
+term = factor, { ( "-" | "+" ) factor } ;
+factor = unary { ( "/" | "*" ) unary };
+unary = ("!" | "-" ) unary | primary ;
+primary = number | string | "true" | "false" | "nil" | "(", expression ,")" ;
 
 grouping = "(" , expression , ")" ;
-unary = [ "-" | "!" ] , expression;
 binary = expression , operator , expression ;
 
 ```
