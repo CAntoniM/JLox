@@ -10,8 +10,9 @@ import java.nio.file.Paths;
 import java.util.List;
 
 class JLox {
-
+    private static final Interpreter interpreter = new Interpreter();
     static public boolean hadError = false;
+    static public boolean hadRuntimeError = false;
 
     private static void report (int line, String where, String message) {
         System.out.println(line + " | Error " + where + ": " + message);
@@ -31,14 +32,20 @@ class JLox {
         report(line,"",message);
     }
 
+    static void runtimeError(RuntimeError error) {
+        System.err.println(error.getMessage() +
+            "\n[line " + error.token.line + "]");
+        hadRuntimeError = true;
+    }
+
     public static void run(String source) {
 
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.scanTokens();
+        Parser parser = new Parser(tokens);
+        Expression expression = parser.parse();
 
-        for (Token token : tokens) {
-            System.out.println(token);
-        }
+        interpreter.interpret(expression);
     }
 
     public static void runFile(String file) throws IOException {
@@ -47,6 +54,7 @@ class JLox {
         run(new String(bytes, Charset.defaultCharset()));
 
         if (hadError) System.exit(65);
+        if (hadRuntimeError) System.exit(70);
     }
 
     public static void runPrompt() throws IOException{
