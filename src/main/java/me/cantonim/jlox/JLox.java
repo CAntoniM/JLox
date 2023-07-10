@@ -11,7 +11,7 @@ import java.util.List;
 
 class JLox {
 
-    static private boolean hadError = false;
+    static public boolean hadError = false;
 
     private static void report (int line, String where, String message) {
         System.out.println(line + " | Error " + where + ": " + message);
