@@ -71,6 +71,10 @@ public class Parser {
             return new Literal(previous().literal);
         }
 
+        if (match(IDENTIFIER)) {
+            return new Expression.Variable(previous());
+        }
+
         if (match(LEFT_PAREN)) {
             Expression expression = expression();
             consume(RIGHT_PAREN, "Expect ')' after expression.");
@@ -158,11 +162,56 @@ public class Parser {
         return expressionStatement();
     }
 
+    private void synchronize() {
+        advance();
+
+        while (!isAtEnd()) {
+            if (previous().type == SEMICOLON) return;
+
+            switch (peek().type) {
+                case CLASS:
+                case FUN:
+                case VAR:
+                case FOR:
+                case IF:
+                case WHILE:
+                case PRINT:
+                case RETURN:
+                    return;
+            }
+
+            advance();
+        }
+    }
+
+    private Statement varDeclaration() {
+        Token name = consume(IDENTIFIER, "Expected a varaible name.");
+
+        Expression initializer = null;
+        if (match(EQUAL)){
+            initializer = expression();
+        }
+
+        consume(SEMICOLON, "Expected ';' after variable declaration.");
+        return new Statement.Var(name,initializer);
+    }
+
+    public Statement declaration() {
+        try {
+            if (match(VAR)) return varDeclaration();
+
+            return statement();
+        } catch (ParserError error) {
+            synchronize();
+            return null;
+        }
+    }
+
     public List<Statement> parse() {
         List<Statement> statements = new ArrayList<>();
 
         while(!isAtEnd()){
-            statements.add(statement());
+            statements.add(declaration());
         }
 
         return statements;

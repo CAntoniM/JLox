@@ -8,6 +8,7 @@ import me.cantonim.jlox.Expression.Literal;
 import me.cantonim.jlox.Expression.Unary;
 import me.cantonim.jlox.Expression.Visitor;
 import me.cantonim.jlox.Statement.Print;
+import me.cantonim.jlox.Statement.Var;
 
 public class Interpreter implements Expression.Visitor<Object>, Statement.Visitor<Void>{
 
@@ -142,6 +143,18 @@ public class Interpreter implements Expression.Visitor<Object>, Statement.Visito
         Object value = evaluate(statement.expression);
         System.out.println(stringify(value));
         return null;
+    }
+
+    @Override
+    public Void visitVarStatement(Var statement) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visitVarStatement'");
+    }
+
+    @Override
+    public Object visitVariableExpression(me.cantonim.jlox.Expression.Variable expression) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visitVariableExpression'");
     }
 
 }

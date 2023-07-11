@@ -7,7 +7,7 @@ public abstract class Statement {
     interface Visitor<R> {
         R visitExpressionStatement(Expression statement);
         R visitPrintStatement(Print statement);
-        R visitVarStatement(Variable statement);
+        R visitVarStatement(Var statement);
     }
 
     static class Expression extends Statement {
@@ -34,8 +34,8 @@ public abstract class Statement {
         public final me.cantonim.jlox.Expression expression;
     }
 
-    static class Variable extends Statement {
-        Variable(Token name, Expression initializer) {
+    static class Var extends Statement {
+        Var(Token name, me.cantonim.jlox.Expression initializer) {
             this.name = name;
             this.initializer = initializer;
         }
@@ -45,7 +45,7 @@ public abstract class Statement {
             return visitor.visitVarStatement(this);
         }
         public final Token name;
-        public final Expression initializer;
+        public final me.cantonim.jlox.Expression initializer;
     }
 
     abstract <R> R accept( Visitor<R> visitor);
