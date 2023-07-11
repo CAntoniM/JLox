@@ -1,5 +1,6 @@
 package me.cantonim.jlox;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import me.cantonim.jlox.Expression.Grouping;
@@ -139,12 +140,32 @@ public class Parser {
         return equality();
     }
 
-    public Expression parse() {
-        try {
-            return expression();
-        } catch (ParserError error) {
-            return null;
+    private Statement expressionStatement() {
+        Expression value = expression();
+        consume(SEMICOLON, "Expect ';' after expression.");
+        return new Statement.Expression(value);
+    }
+
+    private Statement printStatement() {
+        Expression value = expression();
+        consume(SEMICOLON, "Expect ';' after value.");
+        return new Statement.Print(value);
+    }
+
+    public Statement statement() {
+        if (match(PRINT)) return printStatement();
+
+        return expressionStatement();
+    }
+
+    public List<Statement> parse() {
+        List<Statement> statements = new ArrayList<>();
+
+        while(!isAtEnd()){
+            statements.add(statement());
         }
+
+        return statements;
     }
 
 }

@@ -1,12 +1,15 @@
 package me.cantonim.jlox;
 
+import java.util.List;
+
 import me.cantonim.jlox.Expression.Binary;
 import me.cantonim.jlox.Expression.Grouping;
 import me.cantonim.jlox.Expression.Literal;
 import me.cantonim.jlox.Expression.Unary;
 import me.cantonim.jlox.Expression.Visitor;
+import me.cantonim.jlox.Statement.Print;
 
-public class Interpreter implements Visitor<Object> {
+public class Interpreter implements Expression.Visitor<Object>, Statement.Visitor<Void>{
 
     private Object evaluate(Expression expr) {
         return expr.accept(this);
@@ -39,10 +42,15 @@ public class Interpreter implements Visitor<Object> {
         return object.toString();
     }
 
-    void interpret(Expression expression) {
+    private void execute(Statement stmt) {
+        stmt.accept(this);
+    }
+
+    void interpret(List<Statement> statements) {
         try {
-            Object value = evaluate(expression);
-            System.out.println(stringify(value));
+            for(Statement statement : statements) {
+                execute(statement);
+            }
         } catch (RuntimeError error) {
             JLox.runtimeError(error);
         }
@@ -120,6 +128,19 @@ public class Interpreter implements Visitor<Object> {
             default:
         }
 
+        return null;
+    }
+
+    @Override
+    public Void visitExpressionStatement(me.cantonim.jlox.Statement.Expression statement) {
+        evaluate(statement.expression);
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStatement(Print statement) {
+        Object value = evaluate(statement.expression);
+        System.out.println(stringify(value));
         return null;
     }
 

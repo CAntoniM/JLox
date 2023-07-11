@@ -10,27 +10,27 @@ public abstract class Statement {
     }
 
     static class Expression extends Statement {
-        Expression(Expression expression) {
-            this.expression = expression;
+        Expression(me.cantonim.jlox.Expression value) {
+            this.expression = value;
         }
 
         @Override
         <R> R accept(Visitor<R> visitor) {
             return visitor.visitExpressionStatement(this);
         }
-        public final Expression expression;
+        public final me.cantonim.jlox.Expression expression;
     }
 
     static class Print extends Statement {
-        Print(Expression expression) {
-            this.expression = expression;
+        Print(me.cantonim.jlox.Expression value) {
+            this.expression = value;
         }
 
         @Override
         <R> R accept(Visitor<R> visitor) {
             return visitor.visitPrintStatement(this);
         }
-        public final Expression expression;
+        public final me.cantonim.jlox.Expression expression;
     }
 
     abstract <R> R accept( Visitor<R> visitor);

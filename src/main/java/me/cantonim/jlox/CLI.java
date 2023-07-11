@@ -21,7 +21,7 @@ public class CLI {
             .setDefault("WARNING")
             .help("Set the level logging used by the application see log4j2 for explaination of log levels");
         parser.addArgument("file")
-            .nargs(1)
+            .nargs("?")
             .help("The path to the source file to be interpreted");
 
         Namespace namespace = null;

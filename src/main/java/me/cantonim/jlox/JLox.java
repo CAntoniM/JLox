@@ -43,9 +43,9 @@ class JLox {
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.scanTokens();
         Parser parser = new Parser(tokens);
-        Expression expression = parser.parse();
+        List<Statement> statements = parser.parse();
 
-        interpreter.interpret(expression);
+        interpreter.interpret(statements);
     }
 
     public static void runFile(String file) throws IOException {
@@ -62,16 +62,20 @@ class JLox {
         BufferedReader reader = new BufferedReader(input);
 
         for (;;) {
+            try {
+                System.out.print("-> ");
 
-            System.out.print("-> ");
+                String line = reader.readLine();
 
-            String line = reader.readLine();
+                if(line == null) break;
 
-            if(line == null) break;
+                run(line);
 
-            run(line);
+                hadError = false;
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
 
-            hadError = false;
         }
     }
 
