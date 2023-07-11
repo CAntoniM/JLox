@@ -17,16 +17,17 @@ digit ="1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"|"0";
 
 alpha ="a"|"b"|"c"|"d"|"e"|"f"|"g"|"h"|"i"|"j"|"k"|"l"|"m"|"n"|"o"|"p"|"q"|"r"|
 "s"|"t"|"u"|"p"|"w"|"x"|"y"|"z"|"A"|"B"|"C"|"D"|"E"|"F"|"G"|"H"|"I"|"J"|"K"|"L"|
-"M"|"N"|"O"|"P"|"Q"|"R"|"S"|"T"|"U"|"P"|"W"|"X"|"Y"|"Z";
+"M"|"N"|"O"|"P"|"Q"|"R"|"S"|"T"|"U"|"P"|"W"|"X"|"Y"|"Z"|"_";
 
-symbol ="`"|"~"|"!"|"@"|"#"|"$"|"%"|"^"|"&"|"*"|"("|")"|"-"|"_"|"+"|"="|"{"|"}"|
+symbol ="`"|"~"|"!"|"@"|"#"|"$"|"%"|"^"|"&"|"*"|"("|")"|"-"|"+"|"="|"{"|"}"|
 "["|"]"|"|"|"\\"|";"|":"|"'"|"<"|">"|","|"."|"/"|"?";
 
 operator ="=="|"!="|"<"|"<="|">"|">="|"+"|"="|"*"|"/";
 
 number = digit , [ "." , digit , { digit } ];
-string = "\"" , {digit | alpha | symbol } , "\"";
-litteral = number | string | "true" | "false" | "nil" ;
+string = "\"" , { digit | alpha | symbol } , "\"";
+identifier = alpha, [{digit | alpha}] ;
+litteral = number | string | identifier | "true" | "false" | "nil" ;
 
 expression = eqaulity;
 equality = comparision, { ("!=" | "==" ) , comparison };
@@ -45,7 +46,11 @@ print_statement = "print", expression, ";";
 
 statement = expression_statement | print_statement;
 
-program = {statement} , EOF;
+variable_declaration = "var", identifier, [ "=" , expression, ] ":" ;
+
+declaration = variable_declaraion | statement;
+
+program = {declaration} , EOF;
 
 ```
 
