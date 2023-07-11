@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-public class ParserText {
+public class ParserTest {
 
     @Test
     public void Parse() {
