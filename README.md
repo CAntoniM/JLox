@@ -39,5 +39,13 @@ primary = number | string | "true" | "false" | "nil" | "(", expression ,")" ;
 grouping = "(" , expression , ")" ;
 binary = expression , operator , expression ;
 
+expression_statement = expression , ';'
+
+print_statement = "print", expression, ";";
+
+statement = expression_statement | print_statement;
+
+program = {statement} , EOF;
+
 ```
 
