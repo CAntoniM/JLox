@@ -4,6 +4,7 @@ import me.cantonim.jlox.Expression.Binary;
 import me.cantonim.jlox.Expression.Grouping;
 import me.cantonim.jlox.Expression.Literal;
 import me.cantonim.jlox.Expression.Unary;
+import me.cantonim.jlox.Expression.Variable;
 import me.cantonim.jlox.Expression.Visitor;
 
 public class AstPrinter implements Visitor<String>{
@@ -45,5 +46,11 @@ public class AstPrinter implements Visitor<String>{
     @Override
     public String visitUnaryExpression(Unary expression) {
         return parenthesize(expression.operator.lexeme, expression.right);
+    }
+
+    @Override
+    public String visitVariableExpression(Variable expression) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visitVariableExpression'");
     }
 }
