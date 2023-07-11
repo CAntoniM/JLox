@@ -83,5 +83,10 @@ public class Generate {
             "Literal  : Object value",
             "Unary    : Token operator, Expression right"
         ));
+
+        defineAst(outputDir, "Statement", Arrays.asList(
+            "Expression : Expression expression",
+            "Print : Expression expression"
+        ));
     }
 }
