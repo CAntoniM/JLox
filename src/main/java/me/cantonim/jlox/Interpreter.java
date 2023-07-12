@@ -12,6 +12,8 @@ import me.cantonim.jlox.Statement.Var;
 
 public class Interpreter implements Expression.Visitor<Object>, Statement.Visitor<Void>{
 
+    private Enviroment environment = new Enviroment();
+
     private Object evaluate(Expression expr) {
         return expr.accept(this);
     }
@@ -147,14 +149,19 @@ public class Interpreter implements Expression.Visitor<Object>, Statement.Visito
 
     @Override
     public Void visitVarStatement(Var statement) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visitVarStatement'");
+        Object value = null;
+
+        if (statement.initializer != null) {
+            value = evaluate(statement.initializer);
+        }
+
+        environment.define(statement.name.lexeme,value);
+        return null;
     }
 
     @Override
     public Object visitVariableExpression(me.cantonim.jlox.Expression.Variable expression) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visitVariableExpression'");
+        return environment.get(expression.name);
     }
 
 }
