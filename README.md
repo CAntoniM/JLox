@@ -29,7 +29,8 @@ string = "\"" , { digit | alpha | symbol } , "\"";
 identifier = alpha, [{digit | alpha}] ;
 litteral = number | string | identifier | "true" | "false" | "nil" ;
 
-expression = eqaulity;
+expression = assignment;
+assignment = IDENIFIER , "=" , assignment | eqaulity;
 equality = comparision, { ("!=" | "==" ) , comparison };
 comparison = term, { ( ">" | ">=" | "<" | "<=" ) term };
 term = factor, { ( "-" | "+" ) factor } ;
