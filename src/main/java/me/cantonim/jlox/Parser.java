@@ -140,8 +140,24 @@ public class Parser {
         return expression;
     }
 
+    private Expression assignment() {
+        Expression expression = equality();
+
+        if (match (EQUAL)) {
+            Token equals = previous();
+            Expression value = assignment();
+
+            if (expression instanceof Expression.Variable) {
+                Token name = ((Expression.Variable)expression).name;
+                return new Expression.Assign(name,value);
+            }
+            error(equals, "Invalid assigment target.");
+        }
+        return expression;
+    }
+
     private Expression expression() throws ParserError {
-        return equality();
+        return assignment();
     }
 
     private Statement expressionStatement() {

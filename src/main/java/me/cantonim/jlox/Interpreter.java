@@ -2,6 +2,7 @@ package me.cantonim.jlox;
 
 import java.util.List;
 
+import me.cantonim.jlox.Expression.Assign;
 import me.cantonim.jlox.Expression.Binary;
 import me.cantonim.jlox.Expression.Grouping;
 import me.cantonim.jlox.Expression.Literal;
@@ -162,6 +163,13 @@ public class Interpreter implements Expression.Visitor<Object>, Statement.Visito
     @Override
     public Object visitVariableExpression(me.cantonim.jlox.Expression.Variable expression) {
         return environment.get(expression.name);
+    }
+
+    @Override
+    public Object visitAssignExpression(Assign expression) {
+        Object value = evaluate(expression.value);
+        environment.assign(expression.name, value);
+        return value;
     }
 
 }

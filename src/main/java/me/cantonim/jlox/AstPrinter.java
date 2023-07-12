@@ -1,5 +1,6 @@
 package me.cantonim.jlox;
 
+import me.cantonim.jlox.Expression.Assign;
 import me.cantonim.jlox.Expression.Binary;
 import me.cantonim.jlox.Expression.Grouping;
 import me.cantonim.jlox.Expression.Literal;
@@ -52,5 +53,11 @@ public class AstPrinter implements Visitor<String>{
     public String visitVariableExpression(Variable expression) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'visitVariableExpression'");
+    }
+
+    @Override
+    public String visitAssignExpression(Assign expression) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visitAssignExpression'");
     }
 }
