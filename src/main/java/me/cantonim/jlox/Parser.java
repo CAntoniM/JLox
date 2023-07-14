@@ -1,6 +1,7 @@
 package me.cantonim.jlox;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import me.cantonim.jlox.Expression.Grouping;
@@ -232,7 +233,48 @@ public class Parser {
         return new Statement.While(condition, block);
     }
 
+    private Statement forStatement() {
+        consume(LEFT_PAREN, "Expected, '(' after while.");
+
+        Statement initalizer;
+        if (match(SEMICOLON)) {
+            initalizer = null;
+        } else if(match(VAR)) {
+            initalizer = varDeclaration();
+        } else {
+            initalizer = expressionStatement();
+        }
+
+        Expression condition = null;
+        if (!check(SEMICOLON)) {
+            condition = expression();
+        }
+        consume(SEMICOLON, "Expected, ';' after a for loop condition.");
+
+        Expression increment = null;
+        if (!check(SEMICOLON)) {
+            increment = expression();
+        }
+
+        consume(RIGHT_PAREN, "Expected, ')' after for loop increment");
+
+        Statement body = statement();
+
+        if (increment != null) {
+            body = new Statement.Block(Arrays.asList(body,new Statement.Expression(increment)));
+        }
+
+        if (condition == null) condition = new Expression.Literal(true);
+
+        body = new Statement.While(condition, body);
+
+        if (initalizer != null) body = new Statement.Block(Arrays.asList(initalizer,body));
+
+        return body;
+    }
+
     public Statement statement() {
+        if (match(FOR)) return forStatement();
         if (match(IF)) return ifStatement();
         if (match(WHILE)) return whileStatement();
         if (match(PRINT)) return printStatement();

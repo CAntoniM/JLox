@@ -109,24 +109,26 @@ primary = number | string | "true" | "false" | "nil" | "(", expression ,")" ;
 grouping = "(" , expression , ")" ;
 binary = expression , operator , expression ;
 
-expression_statement = expression , ';'
+expression_statement = expression , ';';
 
 print_statement = "print", expression, ";";
 
 block_statement = "{", {declaration,} "}";
 
+variable_declaration = "var", identifier, [ "=" , expression, ] ":" ;
+
+declaration = variable_declaraion | statement;
+
 if_statement = "if" , "(" , expression , ")" , statement [, "else", statement] ;
 while_statement = "while", "(", expression ,")" , statement;
+for_statement = "for", "(", (expression_statement|variable_declaration), ";" , [expression,] ";", [expression,] ")", statement;
 
 statement = expression_statement |
             print_statement      |
             block_statement      |
             if_statement         |
-            while_statement      |;
-
-variable_declaration = "var", identifier, [ "=" , expression, ] ":" ;
-
-declaration = variable_declaraion | statement;
+            while_statement      |
+            for_statement        |;
 
 program = {declaration} , EOF;
 
