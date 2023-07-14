@@ -45,7 +45,9 @@ expression_statement = expression , ';'
 
 print_statement = "print", expression, ";";
 
-statement = expression_statement | print_statement;
+block_statement = "{", {declaration,} "}"
+
+statement = expression_statement | print_statement | block_statement;
 
 variable_declaration = "var", identifier, [ "=" , expression, ] ":" ;
 
