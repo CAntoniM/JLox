@@ -2,6 +2,7 @@ package me.cantonim.jlox;
 
 import me.cantonim.jlox.Expression.Assign;
 import me.cantonim.jlox.Expression.Binary;
+import me.cantonim.jlox.Expression.Call;
 import me.cantonim.jlox.Expression.Grouping;
 import me.cantonim.jlox.Expression.Literal;
 import me.cantonim.jlox.Expression.Logical;
@@ -66,5 +67,11 @@ public class AstPrinter implements Visitor<String>{
     public String visitLogicalExpression(Logical expression) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'visitLogicalExpression'");
+    }
+
+    @Override
+    public String visitCallExpression(Call expression) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visitCallExpression'");
     }
 }

@@ -86,6 +86,37 @@ public class Parser {
         throw error(peek(), "Expect expression.");
     }
 
+    private Expression finishCall(Expression callee) {
+        List<Expression> arguments = new ArrayList<>();
+
+        if (check(RIGHT_PAREN)) {
+            do {
+                if (arguments.size() >= 255) {
+                    error(peek(), "Lox, does not allow function calls with more than 254 arguments");
+                }
+                arguments.add(expression());
+            } while(match(COMMA));
+        }
+
+        Token paren = consume(RIGHT_PAREN, "Expected, ')' after function arguments.");
+
+        return new Expression.Call(callee, paren, arguments);
+    }
+
+    private Expression call() throws ParserError {
+        Expression expression = primary();
+
+        while(true) {
+            if (match(LEFT_PAREN)) {
+                expression = finishCall(expression);
+            }else {
+                break;
+            }
+        }
+
+        return expression;
+    }
+
     private Expression unary() throws ParserError {
         if (match(BANG,MINUS)) {
             Token operator = previous();
@@ -93,7 +124,7 @@ public class Parser {
             return new Expression.Unary(operator, right);
         }
 
-        return primary();
+        return call();
     }
 
     private Expression factor() throws ParserError {

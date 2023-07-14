@@ -104,6 +104,8 @@ comparison = term, { ( ">" | ">=" | "<" | "<=" ) term };
 term = factor, { ( "-" | "+" ) factor } ;
 factor = unary { ( "/" | "*" ) unary };
 unary = ("!" | "-" ) unary | primary ;
+call = primary { "(", [arguments,] ")" };
+arguemnts = expression {, "," , expression};
 primary = number | string | "true" | "false" | "nil" | "(", expression ,")" ;
 
 grouping = "(" , expression , ")" ;

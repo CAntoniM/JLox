@@ -1,9 +1,11 @@
 package me.cantonim.jlox;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import me.cantonim.jlox.Expression.Assign;
 import me.cantonim.jlox.Expression.Binary;
+import me.cantonim.jlox.Expression.Call;
 import me.cantonim.jlox.Expression.Grouping;
 import me.cantonim.jlox.Expression.Literal;
 import me.cantonim.jlox.Expression.Logical;
@@ -226,6 +228,20 @@ public class Interpreter implements Expression.Visitor<Object>, Statement.Visito
             execute(statement.body);
         }
         return null;
+    }
+
+    @Override
+    public Object visitCallExpression(Call expression) {
+        Object callee = evaluate(expression.callee);
+
+        List<Object> arguments = new ArrayList<>();
+
+        for (Expression argument : expression.arguments) {
+            arguments.add(evaluate(argument));
+        }
+
+        LoxCallable function = (LoxCallable)callee;
+        return function.call(this, arguments);
     }
 
 }

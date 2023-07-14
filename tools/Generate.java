@@ -83,6 +83,7 @@ public class Generate {
             "Assign   : Token name, Expression value",
             "Binary   : Expression left, Token operator, Expression right",
             "Grouping : Expression expression",
+            "Call     : Expression callee, Token Paren, List<Expression> arguments",
             "Literal  : Object value",
             "Logical  : Expression left, Token operator, Expression right",
             "Unary    : Token operator, Expression right",
