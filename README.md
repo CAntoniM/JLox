@@ -65,7 +65,7 @@ the language features defined at
 - [x] print statements
 - [x] assignment expressions
 - [x] block statements
-- [ ] if statements
+- [x] if statements
 - [ ] while statments
 - [ ] function statements
 - [ ] classes
@@ -96,7 +96,9 @@ identifier = alpha, [{digit | alpha}] ;
 litteral = number | string | identifier | "true" | "false" | "nil" ;
 
 expression = assignment;
-assignment = IDENIFIER , "=" , assignment | eqaulity;
+assignment = IDENIFIER , "=" , assignment | logical_or;
+logical_or = logical_and {, "or", logical_and};
+logical_and = eqaulaity {, "and", logical_and};
 equality = comparision, { ("!=" | "==" ) , comparison };
 comparison = term, { ( ">" | ">=" | "<" | "<=" ) term };
 term = factor, { ( "-" | "+" ) factor } ;

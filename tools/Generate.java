@@ -11,7 +11,6 @@ public class Generate {
 
         String feilds[] = fieldList.split(", ");
         for (String feild : feilds) {
-            System.out.println(feild);
             String name = feild.split(" ")[1];
             writer.println("            this." + name + " = " + name + ";");
         }
@@ -85,6 +84,7 @@ public class Generate {
             "Binary   : Expression left, Token operator, Expression right",
             "Grouping : Expression expression",
             "Literal  : Object value",
+            "Logical  : Expression left, Token operator, Expression right",
             "Unary    : Token operator, Expression right",
             "Variable : Token name"
         ));

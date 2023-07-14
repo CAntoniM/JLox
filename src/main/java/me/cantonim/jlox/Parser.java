@@ -5,6 +5,7 @@ import java.util.List;
 
 import me.cantonim.jlox.Expression.Grouping;
 import me.cantonim.jlox.Expression.Literal;
+import me.cantonim.jlox.Expression.Logical;
 
 import static me.cantonim.jlox.TokenType.*;
 
@@ -140,8 +141,32 @@ public class Parser {
         return expression;
     }
 
-    private Expression assignment() {
+    private Expression and() {
         Expression expression = equality();
+
+        while(match(AND)) {
+            Token operator = previous();
+            Expression right = equality();
+            expression = new Logical(expression, operator, right);
+        }
+
+        return expression;
+    }
+
+    private Expression or() {
+        Expression expression = and();
+
+        while(match(OR)) {
+            Token operator = previous();
+            Expression right = and();
+            expression = new Logical(expression, operator, right);
+        }
+
+        return expression;
+    }
+
+    private Expression assignment() {
+        Expression expression = or();
 
         if (match (EQUAL)) {
             Token equals = previous();

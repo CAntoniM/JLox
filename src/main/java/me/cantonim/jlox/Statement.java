@@ -38,8 +38,8 @@ public abstract class Statement {
     }
 
     static class If extends Statement {
-        If(me.cantonim.jlox.Expression expression, Statement thenBranch, Statement elseBranch) {
-            this.condition = expression;
+        If(me.cantonim.jlox.Expression condition, Statement thenBranch, Statement elseBranch) {
+            this.condition = condition;
             this.thenBranch = thenBranch;
             this.elseBranch = elseBranch;
         }

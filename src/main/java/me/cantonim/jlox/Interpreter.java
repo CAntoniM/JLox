@@ -6,6 +6,7 @@ import me.cantonim.jlox.Expression.Assign;
 import me.cantonim.jlox.Expression.Binary;
 import me.cantonim.jlox.Expression.Grouping;
 import me.cantonim.jlox.Expression.Literal;
+import me.cantonim.jlox.Expression.Logical;
 import me.cantonim.jlox.Expression.Unary;
 import me.cantonim.jlox.Expression.Visitor;
 import me.cantonim.jlox.Statement.Block;
@@ -202,6 +203,20 @@ public class Interpreter implements Expression.Visitor<Object>, Statement.Visito
             execute(statement.elseBranch);
         }
         return null;
+    }
+
+    @Override
+    public Object visitLogicalExpression(Logical expression) {
+        Object left = evaluate(expression);
+        if (expression.operator.type == TokenType.OR) {
+            if(isTruthy(left)) {
+                return left;
+            }else if (!isTruthy(left)) {
+                return left;
+            }
+        }
+
+        return evaluate(expression.right);
     }
 
 }
