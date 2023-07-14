@@ -23,12 +23,14 @@ public class Generate {
         writer.println("        <R> R accept(Visitor<R> visitor) {");
         writer.println("            return visitor.visit" + className + baseName + "(this);");
         writer.println("        }");
+        writer.println();
 
         for (String feild: feilds) {
             writer.println("        public final " + feild + ";");
         }
 
         writer.println("    }");
+        writer.println();
     }
 
     private static void defineVisitor(PrintWriter writer, String baseName, List<String> types) {
@@ -52,6 +54,7 @@ public class Generate {
         writer.println("import java.util.List;");
         writer.println();
         writer.println("public abstract class " + baseName + " {");
+        writer.println();
 
         defineVisitor(writer,baseName, types);
 
@@ -63,7 +66,7 @@ public class Generate {
 
         writer.println();
         writer.println("    abstract <R> R accept( Visitor<R> visitor);");
-
+        writer.println();
         writer.println("}");
         writer.close();
 
@@ -78,7 +81,7 @@ public class Generate {
         String outputDir = args[0];
 
         defineAst(outputDir, "Expression", Arrays.asList(
-            "Assign   : Token name, Expresion value",
+            "Assign   : Token name, Expression value",
             "Binary   : Expression left, Token operator, Expression right",
             "Grouping : Expression expression",
             "Literal  : Object value",
@@ -87,9 +90,10 @@ public class Generate {
         ));
 
         defineAst(outputDir, "Statement", Arrays.asList(
-            "Expression : Expression expression",
-            "Print : Expression expression",
-            "Var : Token name, Expression initializer"
+            "Block : List<Statement> statements",
+            "Expression : me.cantonim.jlox.Expression expression",
+            "Print : me.cantonim.jlox.Expression expression",
+            "Var : Token name, me.cantonim.jlox.Expression initializer"
         ));
     }
 }
