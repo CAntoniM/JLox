@@ -31,7 +31,7 @@ gold as far as i am concerened. to run the build run the command
 mvn package
 ```
 
-This will build, test and package the jlox jar in 
+This will build, test and package the jlox jar in
 target/jlox-<Version>-jar-with-dependencies.jar. We use the with dependances jar
 as we want to ship as a stand alone executable without worrying about java
 class paths or even class names (see the fact we ship a runnable jar).
@@ -55,7 +55,7 @@ java Generate ../src/main/me/cantonim/jlox/
 
 as we developing an intrepterter for a already defiend language there is a fixed
 set of lanauge functonality that we need to set ourselfs too. below is a list of
-the language features defined at 
+the language features defined at
 [Crafting Interpeters](https://craftinginterpreters.com/the-lox-language.html)
 
 - [x] arithmetic expression
@@ -65,7 +65,7 @@ the language features defined at
 - [x] print statements
 - [x] assignment expressions
 - [x] block statements
-- [ ] if statements 
+- [ ] if statements
 - [ ] while statments
 - [ ] function statements
 - [ ] classes
@@ -77,7 +77,6 @@ Below is a ebnf representation of the grammer of the lanaguage this will be a
 translation of lox's own context free grammer abstraction as ebnf is way more
 common to see in other languages not just lox and therefore is way more useful
 to me
-
 
 ```ebnf
 digit ="1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"|"0";
@@ -112,9 +111,14 @@ expression_statement = expression , ';'
 
 print_statement = "print", expression, ";";
 
-block_statement = "{", {declaration,} "}"
+block_statement = "{", {declaration,} "}";
 
-statement = expression_statement | print_statement | block_statement;
+if_statement = "if" , "(" , expression , ")" , statement [, "else", statement] ;
+
+statement = expression_statement |
+            print_statement |
+            block_statement |
+            if_statement;
 
 variable_declaration = "var", identifier, [ "=" , expression, ] ":" ;
 
