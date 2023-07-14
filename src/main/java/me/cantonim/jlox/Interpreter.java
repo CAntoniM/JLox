@@ -8,6 +8,7 @@ import me.cantonim.jlox.Expression.Grouping;
 import me.cantonim.jlox.Expression.Literal;
 import me.cantonim.jlox.Expression.Unary;
 import me.cantonim.jlox.Expression.Visitor;
+import me.cantonim.jlox.Statement.Block;
 import me.cantonim.jlox.Statement.Print;
 import me.cantonim.jlox.Statement.Var;
 
@@ -170,6 +171,26 @@ public class Interpreter implements Expression.Visitor<Object>, Statement.Visito
         Object value = evaluate(expression.value);
         environment.assign(expression.name, value);
         return value;
+    }
+
+    public Void executeBlock(List<Statement> statements, Enviroment enviroment) {
+        Enviroment previous = this.environment;
+
+        try {
+            this.environment = enviroment;
+
+            for (Statement statment : statements) {
+                execute(statment);
+            }
+        } finally {
+            this.environment = previous;
+        }
+        return null;
+    }
+
+    @Override
+    public Void visitBlockStatement(Block statement) {
+        return executeBlock(statement.statements, new Enviroment(environment));
     }
 
 }

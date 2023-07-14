@@ -172,8 +172,20 @@ public class Parser {
         return new Statement.Print(value);
     }
 
+    public List<Statement> block() {
+        List<Statement> statements = new ArrayList<>();
+
+        while(!check(RIGHT_BRACE) && ! isAtEnd()) {
+            statements.add(declaration());
+        }
+       
+        consume(RIGHT_BRACE, "Expected, '}' after block");
+        return statements;
+    }
+
     public Statement statement() {
         if (match(PRINT)) return printStatement();
+        if (match(LEFT_BRACE)) return new Statement.Block(block());
 
         return expressionStatement();
     }

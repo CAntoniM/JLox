@@ -1,0 +1,9 @@
+
+var foo = "Hello, ";
+
+{
+    foo = "bar, ";
+    var bar = "baz.";
+
+    print foo + bar;
+}
