@@ -7,6 +7,7 @@ public abstract class Statement {
     interface Visitor<R> {
         R visitBlockStatement(Block statement);
         R visitExpressionStatement(Expression statement);
+        R visitIfStatement(If statement);
         R visitPrintStatement(Print statement);
         R visitVarStatement(Var statement);
     }
@@ -34,6 +35,23 @@ public abstract class Statement {
         }
 
         public final me.cantonim.jlox.Expression expression;
+    }
+
+    static class If extends Statement {
+        If(me.cantonim.jlox.Expression expression, Statement thenBranch, Statement elseBranch) {
+            this.expression = expression;
+            this.thenBranch = thenBranch;
+            this.elseBranch = elseBranch;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitIfStatement(this);
+        }
+
+        public final me.cantonim.jlox.Expression expression;
+        public final Statement thenBranch;
+        public final Statement elseBranch;
     }
 
     static class Print extends Statement {
