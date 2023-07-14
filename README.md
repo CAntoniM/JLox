@@ -116,11 +116,13 @@ print_statement = "print", expression, ";";
 block_statement = "{", {declaration,} "}";
 
 if_statement = "if" , "(" , expression , ")" , statement [, "else", statement] ;
+while_statement = "while", "(", expression ,")" , statement;
 
 statement = expression_statement |
-            print_statement |
-            block_statement |
-            if_statement;
+            print_statement      |
+            block_statement      |
+            if_statement         |
+            while_statement      |;
 
 variable_declaration = "var", identifier, [ "=" , expression, ] ":" ;
 

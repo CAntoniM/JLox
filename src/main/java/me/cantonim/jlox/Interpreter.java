@@ -13,6 +13,7 @@ import me.cantonim.jlox.Statement.Block;
 import me.cantonim.jlox.Statement.If;
 import me.cantonim.jlox.Statement.Print;
 import me.cantonim.jlox.Statement.Var;
+import me.cantonim.jlox.Statement.While;
 
 public class Interpreter implements Expression.Visitor<Object>, Statement.Visitor<Void>{
 
@@ -217,6 +218,14 @@ public class Interpreter implements Expression.Visitor<Object>, Statement.Visito
         }
 
         return evaluate(expression.right);
+    }
+
+    @Override
+    public Void visitWhileStatement(While statement) {
+        while(isTruthy(evaluate(statement.expression))) {
+            execute(statement.body);
+        }
+        return null;
     }
 
 }

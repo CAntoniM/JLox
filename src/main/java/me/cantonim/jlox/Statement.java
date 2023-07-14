@@ -10,6 +10,7 @@ public abstract class Statement {
         R visitIfStatement(If statement);
         R visitPrintStatement(Print statement);
         R visitVarStatement(Var statement);
+        R visitWhileStatement(While statement);
     }
     static class Block extends Statement {
         Block(List<Statement> statements) {
@@ -80,6 +81,21 @@ public abstract class Statement {
 
         public final Token name;
         public final me.cantonim.jlox.Expression initializer;
+    }
+
+    static class While extends Statement {
+        While(me.cantonim.jlox.Expression expression, Statement body) {
+            this.expression = expression;
+            this.body = body;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitWhileStatement(this);
+        }
+
+        public final me.cantonim.jlox.Expression expression;
+        public final Statement body;
     }
 
 
