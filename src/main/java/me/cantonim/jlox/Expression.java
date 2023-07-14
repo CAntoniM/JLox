@@ -22,9 +22,11 @@ public abstract class Expression {
         <R> R accept(Visitor<R> visitor) {
             return visitor.visitAssignExpression(this);
         }
+
         public final Token name;
         public final Expression value;
     }
+
     static class Binary extends Expression {
         Binary(Expression left, Token operator, Expression right) {
             this.left = left;
@@ -82,6 +84,7 @@ public abstract class Expression {
         public final Token operator;
         public final Expression right;
     }
+
     static class Variable extends Expression {
         Variable(Token name) {
             this.name = name;
@@ -91,8 +94,11 @@ public abstract class Expression {
         <R> R accept(Visitor<R> visitor) {
             return visitor.visitVariableExpression(this);
         }
+
         public final Token name;
     }
 
+
     abstract <R> R accept( Visitor<R> visitor);
+
 }
