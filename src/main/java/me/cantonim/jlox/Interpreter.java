@@ -9,6 +9,7 @@ import me.cantonim.jlox.Expression.Literal;
 import me.cantonim.jlox.Expression.Unary;
 import me.cantonim.jlox.Expression.Visitor;
 import me.cantonim.jlox.Statement.Block;
+import me.cantonim.jlox.Statement.If;
 import me.cantonim.jlox.Statement.Print;
 import me.cantonim.jlox.Statement.Var;
 
@@ -191,6 +192,16 @@ public class Interpreter implements Expression.Visitor<Object>, Statement.Visito
     @Override
     public Void visitBlockStatement(Block statement) {
         return executeBlock(statement.statements, new Enviroment(environment));
+    }
+
+    @Override
+    public Void visitIfStatement(If statement) {
+        if(isTruthy(evaluate(statement.condition))) {
+            execute(statement.thenBranch);
+        }else {
+            execute(statement.elseBranch);
+        }
+        return null;
     }
 
 }

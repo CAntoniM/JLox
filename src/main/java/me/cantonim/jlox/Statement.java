@@ -39,7 +39,7 @@ public abstract class Statement {
 
     static class If extends Statement {
         If(me.cantonim.jlox.Expression expression, Statement thenBranch, Statement elseBranch) {
-            this.expression = expression;
+            this.condition = expression;
             this.thenBranch = thenBranch;
             this.elseBranch = elseBranch;
         }
@@ -49,7 +49,7 @@ public abstract class Statement {
             return visitor.visitIfStatement(this);
         }
 
-        public final me.cantonim.jlox.Expression expression;
+        public final me.cantonim.jlox.Expression condition;
         public final Statement thenBranch;
         public final Statement elseBranch;
     }

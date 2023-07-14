@@ -172,18 +172,33 @@ public class Parser {
         return new Statement.Print(value);
     }
 
-    public List<Statement> block() {
+    private List<Statement> block() {
         List<Statement> statements = new ArrayList<>();
 
         while(!check(RIGHT_BRACE) && ! isAtEnd()) {
             statements.add(declaration());
         }
-       
+
         consume(RIGHT_BRACE, "Expected, '}' after block");
         return statements;
     }
 
+    private Statement ifStatement() {
+        consume(LEFT_PAREN, "Expected, '(' after if.");
+        Expression condition = expression();
+        consume(RIGHT_PAREN, "Expected, ')' after condition.");
+
+        Statement thenBranch = statement();
+        Statement elseBranch = null;
+
+        if (match(ELSE)) {
+            elseBranch = statement();
+        }
+        return new Statement.If(condition, thenBranch, elseBranch);
+    }
+
     public Statement statement() {
+        if (match(IF)) return ifStatement();
         if (match(PRINT)) return printStatement();
         if (match(LEFT_BRACE)) return new Statement.Block(block());
 
