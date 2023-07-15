@@ -12,6 +12,7 @@ import me.cantonim.jlox.Expression.Logical;
 import me.cantonim.jlox.Expression.Unary;
 import me.cantonim.jlox.Expression.Visitor;
 import me.cantonim.jlox.Statement.Block;
+import me.cantonim.jlox.Statement.Function;
 import me.cantonim.jlox.Statement.If;
 import me.cantonim.jlox.Statement.Print;
 import me.cantonim.jlox.Statement.Var;
@@ -270,6 +271,14 @@ public class Interpreter implements Expression.Visitor<Object>, Statement.Visito
                 arguments.size() + ".");
     }
         return function.call(this, arguments);
+    }
+
+    @Override
+    public Void visitFunctionStatement(Function statement) {
+        LoxFunction function = new LoxFunction(statement);
+
+        environment.define(statement.name.lexeme, function);
+        return null;
     }
 
 }

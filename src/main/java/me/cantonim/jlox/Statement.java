@@ -7,6 +7,7 @@ public abstract class Statement {
     interface Visitor<R> {
         R visitBlockStatement(Block statement);
         R visitExpressionStatement(Expression statement);
+        R visitFunctionStatement(Function statement);
         R visitIfStatement(If statement);
         R visitPrintStatement(Print statement);
         R visitVarStatement(Var statement);
@@ -36,6 +37,23 @@ public abstract class Statement {
         }
 
         public final me.cantonim.jlox.Expression expression;
+    }
+
+    static class Function extends Statement {
+        Function(Token name, List<Token> params, List<Statement> body) {
+            this.name = name;
+            this.params = params;
+            this.body = body;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitFunctionStatement(this);
+        }
+
+        public final Token name;
+        public final List<Token> params;
+        public final List<Statement> body;
     }
 
     static class If extends Statement {

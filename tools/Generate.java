@@ -93,6 +93,7 @@ public class Generate {
         defineAst(outputDir, "Statement", Arrays.asList(
             "Block : List<Statement> statements",
             "Expression : me.cantonim.jlox.Expression expression",
+            "Function: Token name, List<Token> params, List<Statement> body",
             "If : me.cantonim.jlox.Expression condition, Statement thenBranch, Statement elseBranch",
             "Print : me.cantonim.jlox.Expression expression",
             "Var : Token name, me.cantonim.jlox.Expression initializer",

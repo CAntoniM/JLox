@@ -348,8 +348,31 @@ public class Parser {
         return new Statement.Var(name,initializer);
     }
 
+    private Statement function(String kind) {
+        Token name = consume(IDENTIFIER, "Expected: " + kind + "name" );
+        consume(LEFT_PAREN, "Expected: '(' after " + kind + "name");
+
+        List<Token> parameters = new ArrayList<>();
+        if (!check(RIGHT_PAREN)) {
+            do {
+                if (parameters.size() > 254)
+                    error(peek(), "Can't have more than 255 parameters.");
+
+                parameters.add(consume(IDENTIFIER, "Expected, parameter name"));
+            }while (match(COMMA));
+        }
+
+        consume(RIGHT_PAREN, "Expected, right parrentheisis.");
+        consume(LEFT_BRACE, "Expected '{' before " + kind + "body");
+
+        List<Statement> body = block();
+
+        return new Statement.Function(name, parameters, body);
+    }
+
     public Statement declaration() {
         try {
+            if (match(FUN)) return function("function");
             if (match(VAR)) return varDeclaration();
 
             return statement();

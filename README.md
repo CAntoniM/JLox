@@ -66,7 +66,7 @@ the language features defined at
 - [x] assignment expressions
 - [x] block statements
 - [x] if statements
-- [ ] while statments
+- [x] while statments
 - [ ] function statements
 - [ ] classes
 - [ ] closures
@@ -119,7 +119,13 @@ block_statement = "{", {declaration,} "}";
 
 variable_declaration = "var", identifier, [ "=" , expression, ] ":" ;
 
-declaration = variable_declaraion | statement;
+parameters = identifier {, "," , identifier};
+
+function = identifier , "(" , [parameters] , ")", block;
+
+function_declaration = "fun", function ;
+
+declaration = function_declaration | variable_declaraion | statement;
 
 if_statement = "if" , "(" , expression , ")" , statement [, "else", statement] ;
 while_statement = "while", "(", expression ,")" , statement;
