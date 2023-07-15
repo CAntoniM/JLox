@@ -12,6 +12,7 @@ public abstract class Statement {
         R visitPrintStatement(Print statement);
         R visitVarStatement(Var statement);
         R visitWhileStatement(While statement);
+        R visitReturnStatement(Return statement);
     }
     static class Block extends Statement {
         Block(List<Statement> statements) {
@@ -114,6 +115,21 @@ public abstract class Statement {
 
         public final me.cantonim.jlox.Expression expression;
         public final Statement body;
+    }
+
+    static class Return extends Statement {
+        Return(Token keyword, me.cantonim.jlox.Expression value) {
+            this.keyword = keyword;
+            this.value = value;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitReturnStatement(this);
+        }
+
+        public final Token keyword;
+        public final me.cantonim.jlox.Expression value;
     }
 
 

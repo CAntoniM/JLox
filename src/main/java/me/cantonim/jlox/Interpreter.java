@@ -15,6 +15,7 @@ import me.cantonim.jlox.Statement.Block;
 import me.cantonim.jlox.Statement.Function;
 import me.cantonim.jlox.Statement.If;
 import me.cantonim.jlox.Statement.Print;
+import me.cantonim.jlox.Statement.Return;
 import me.cantonim.jlox.Statement.Var;
 import me.cantonim.jlox.Statement.While;
 
@@ -275,10 +276,19 @@ public class Interpreter implements Expression.Visitor<Object>, Statement.Visito
 
     @Override
     public Void visitFunctionStatement(Function statement) {
-        LoxFunction function = new LoxFunction(statement);
+        LoxFunction function = new LoxFunction(statement,environment);
 
         environment.define(statement.name.lexeme, function);
         return null;
+    }
+
+    @Override
+    public Void visitReturnStatement(Return statement) {
+        Object value = null;
+        if (statement.value != null) {
+            value = evaluate(statement.value);
+        }
+        throw new me.cantonim.jlox.Return(value);
     }
 
 }

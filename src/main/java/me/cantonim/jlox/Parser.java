@@ -308,10 +308,22 @@ public class Parser {
         if (match(FOR)) return forStatement();
         if (match(IF)) return ifStatement();
         if (match(WHILE)) return whileStatement();
+        if (match(RETURN)) return returnStatments();
         if (match(PRINT)) return printStatement();
         if (match(LEFT_BRACE)) return new Statement.Block(block());
 
         return expressionStatement();
+    }
+
+    private Statement returnStatments() {
+        Token keyword = previous();
+        Expression value = null;
+        if (! check(SEMICOLON)) {
+            value = expression();
+        }
+
+        consume(SEMICOLON, "Expected, ';' after a return value");
+        return new Statement.Return(keyword, value);
     }
 
     private void synchronize() {

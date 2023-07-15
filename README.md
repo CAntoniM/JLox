@@ -131,11 +131,14 @@ if_statement = "if" , "(" , expression , ")" , statement [, "else", statement] ;
 while_statement = "while", "(", expression ,")" , statement;
 for_statement = "for", "(", (expression_statement|variable_declaration), ";" , [expression,] ";", [expression,] ")", statement;
 
+return_statement = "return" , [expression], ';' ;
+
 statement = expression_statement |
             print_statement      |
             block_statement      |
             if_statement         |
             while_statement      |
+            return_statement     |
             for_statement        |;
 
 program = {declaration} , EOF;
