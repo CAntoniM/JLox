@@ -1,0 +1,9 @@
+
+var start = clock();
+
+var count = 1;
+for (var index = 0; index < 1000; index = index + 1 ) {
+    count = count * 2;
+}
+
+print clock() - start;

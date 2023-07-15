@@ -19,7 +19,25 @@ import me.cantonim.jlox.Statement.While;
 
 public class Interpreter implements Expression.Visitor<Object>, Statement.Visitor<Void>{
 
-    private Enviroment environment = new Enviroment();
+    final Enviroment globals = new Enviroment();
+    private Enviroment environment = globals;
+
+    public Interpreter() {
+        globals.define("clock", new LoxCallable() {
+            @Override
+            public int arity() {return 0;}
+
+            @Override
+            public Object call(Interpreter interpreter, List<Object> arguments) {
+                return (double) System.currentTimeMillis()/1000.0;
+            }
+
+            @Override
+            public String toString() {
+                return "<native function>";
+            }
+        });
+    }
 
     private Object evaluate(Expression expr) {
         return expr.accept(this);
@@ -240,7 +258,17 @@ public class Interpreter implements Expression.Visitor<Object>, Statement.Visito
             arguments.add(evaluate(argument));
         }
 
+        if( !(callee instanceof LoxCallable)) {
+            throw new RuntimeError(expression.Paren, "only functions and classes are callable.");
+        }
+
         LoxCallable function = (LoxCallable)callee;
+
+        if (arguments.size() != function.arity()) {
+            throw new RuntimeError(expression.Paren, "Expected " +
+                function.arity() + " arguments but got " +
+                arguments.size() + ".");
+    }
         return function.call(this, arguments);
     }
 

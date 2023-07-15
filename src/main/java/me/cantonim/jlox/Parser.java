@@ -89,7 +89,7 @@ public class Parser {
     private Expression finishCall(Expression callee) {
         List<Expression> arguments = new ArrayList<>();
 
-        if (check(RIGHT_PAREN)) {
+        if (!check(RIGHT_PAREN)) {
             do {
                 if (arguments.size() >= 255) {
                     error(peek(), "Lox, does not allow function calls with more than 254 arguments");
