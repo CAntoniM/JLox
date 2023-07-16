@@ -77,6 +77,8 @@ public class Parser {
             return new Expression.Variable(previous());
         }
 
+        if (match(THIS)) return new Expression.This(previous());
+
         if (match(LEFT_PAREN)) {
             Expression expression = expression();
             consume(RIGHT_PAREN, "Expect ')' after expression.");
@@ -109,6 +111,9 @@ public class Parser {
         while(true) {
             if (match(LEFT_PAREN)) {
                 expression = finishCall(expression);
+            }else if (match(DOT)) {
+                Token name = consume(IDENTIFIER, "Expected, property name after '.'.");
+                expression = new Expression.Get(expression,name);
             }else {
                 break;
             }
@@ -207,6 +212,9 @@ public class Parser {
             if (expression instanceof Expression.Variable) {
                 Token name = ((Expression.Variable)expression).name;
                 return new Expression.Assign(name,value);
+            }else if (expression instanceof Expression.Get) {
+                Expression.Get get = (Expression.Get)expression;
+                return new Expression.Set(get.Object,get.name,value);
             }
             error(equals, "Invalid assigment target.");
         }
@@ -360,7 +368,7 @@ public class Parser {
         return new Statement.Var(name,initializer);
     }
 
-    private Statement function(String kind) {
+    private Statement.Function function(String kind) {
         Token name = consume(IDENTIFIER, "Expected: " + kind + "name" );
         consume(LEFT_PAREN, "Expected: '(' after " + kind + "name");
 
@@ -382,8 +390,24 @@ public class Parser {
         return new Statement.Function(name, parameters, body);
     }
 
+    private Statement classDeclaration() {
+        Token name = consume(IDENTIFIER, "Expected class name.");
+
+        consume(LEFT_BRACE,"Expeced, '{' before class body.");
+        List<Statement.Function> methods = new ArrayList<>();
+
+        while(!check(RIGHT_BRACE) && !isAtEnd()) {
+            methods.add(function("method"));
+        }
+
+        consume(RIGHT_BRACE, "Expect '}' after class body.");
+
+        return new Statement.Class(name,methods);
+    }
+
     public Statement declaration() {
         try {
+            if (match(CLASS)) return classDeclaration();
             if (match(FUN)) return function("function");
             if (match(VAR)) return varDeclaration();
 

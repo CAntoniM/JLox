@@ -67,9 +67,9 @@ the language features defined at
 - [x] block statements
 - [x] if statements
 - [x] while statments
-- [ ] function statements
+- [x] function statements
 - [ ] classes
-- [ ] closures
+- [x] closures
 
 ## Language theory
 
@@ -96,7 +96,7 @@ identifier = alpha, [{digit | alpha}] ;
 litteral = number | string | identifier | "true" | "false" | "nil" ;
 
 expression = assignment;
-assignment = IDENIFIER , "=" , assignment | logical_or;
+assignment = [call, ".",] IDENIFIER , "=" , assignment | logical_or;
 logical_or = logical_and {, "or", logical_and};
 logical_and = eqaulaity {, "and", logical_and};
 equality = comparision, { ("!=" | "==" ) , comparison };
@@ -104,7 +104,7 @@ comparison = term, { ( ">" | ">=" | "<" | "<=" ) term };
 term = factor, { ( "-" | "+" ) factor } ;
 factor = unary { ( "/" | "*" ) unary };
 unary = ("!" | "-" ) unary | primary ;
-call = primary { "(", [arguments,] ")" };
+call = primary { ("(", [arguments,] ")" | ".", identifier ) };
 arguemnts = expression {, "," , expression};
 primary = number | string | "true" | "false" | "nil" | "(", expression ,")" ;
 
@@ -125,7 +125,9 @@ function = identifier , "(" , [parameters] , ")", block;
 
 function_declaration = "fun", function ;
 
-declaration = function_declaration | variable_declaraion | statement;
+class_declaration = "class" , identifier , "{" , {function,} "}";
+
+declaration = class_declaration | function_declaration | variable_declaraion | statement;
 
 if_statement = "if" , "(" , expression , ")" , statement [, "else", statement] ;
 while_statement = "while", "(", expression ,")" , statement;

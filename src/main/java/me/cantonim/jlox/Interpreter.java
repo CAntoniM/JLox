@@ -297,7 +297,7 @@ public class Interpreter implements Expression.Visitor<Object>, Statement.Visito
 
     @Override
     public Void visitFunctionStatement(Function statement) {
-        LoxFunction function = new LoxFunction(statement,environment);
+        LoxFunction function = new LoxFunction(statement,environment,false);
 
         environment.define(statement.name.lexeme, function);
         return null;
@@ -316,4 +316,50 @@ public class Interpreter implements Expression.Visitor<Object>, Statement.Visito
 
         locals.put(expression, depth);
     }
+
+    @Override
+    public Void visitClassStatement(Statement.Class statement) {
+        environment.define(statement.name.lexeme, null);
+
+        Map<String,LoxFunction> methods = new HashMap<>();
+
+        for(Statement.Function method: statement.methods) {
+            LoxFunction function = new LoxFunction(method, environment,method.name.lexeme.equals("init"));
+            methods.put(method.name.lexeme,function);
+        }
+
+        LoxClass klass = new LoxClass(statement.name.lexeme,methods);
+        environment.assign(statement.name, klass);
+
+        return null;
+    }
+
+
+    @Override
+    public Object visitGetExpression(Expression.Get expression) {
+        Object object = evaluate(expression.Object);
+        if (object instanceof LoxInstance) {
+            return ((LoxInstance) object).get(expression.name);
+        }
+
+        throw new RuntimeError(expression.name,"Only class instances have properties");
+    }
+
+    @Override
+    public Object visitSetExpression(Expression.Set expression) {
+        Object object = evaluate(expression.object);
+
+        if(!(object instanceof LoxInstance)) {
+            throw new RuntimeError(expression.name, "Only class instances have properties");
+        }
+
+        Object value = evaluate(expression.value);
+        ((LoxInstance)object).set(expression.name, value);
+        return value;
+    }
+
+    public Object visitThisExpression(Expression.This expression) {
+        return lookUpVariable(expression.keyword,expression);
+    }
+
 }

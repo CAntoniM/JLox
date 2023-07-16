@@ -25,6 +25,7 @@ public class Resolver implements Expression.Visitor<Void>, Statement.Visitor<Voi
     private final Interpreter interpreter;
     private final Stack<HashMap<String,Boolean>> scopes = new Stack<>();
     private FunctionType currentFunction = FunctionType.NONE;
+    private ClassType currentClass = ClassType.NONE;
 
     Resolver (Interpreter interpreter){
         this.interpreter = interpreter;
@@ -160,8 +161,15 @@ public class Resolver implements Expression.Visitor<Void>, Statement.Visitor<Voi
             JLox.error(statement.keyword, "Invalid return: can not return from the top level code");
         }
 
-        if (statement.value != null)
+        if (statement.value != null) {
+
+            if (currentFunction == FunctionType.INITIALIZER) {
+                JLox.error(statement.keyword, "Invalid return: you can not return from a class constructor");
+            }
+
             resolve(statement.value);
+
+        }
         return null;
     }
 
@@ -226,4 +234,58 @@ public class Resolver implements Expression.Visitor<Void>, Statement.Visitor<Voi
         resolveLocal(expression, expression.name);
         return null;
     }
+
+    @Override
+    public Void visitClassStatement (Statement.Class statement) {
+
+        ClassType enclosingClass = currentClass;
+        currentClass = ClassType.CLASS;
+
+        declare(statement.name);
+        define(statement.name);
+
+        beginScope();
+        scopes.peek().put("this",true);
+
+        for (Statement.Function method : statement.methods) {
+
+            FunctionType type = FunctionType.METHOD;
+            if (method.name.lexeme.equals("init")) {
+                type = FunctionType.INITIALIZER;
+            }
+            resolveFunction(method, type);
+
+        }
+
+        endScope();
+
+        currentClass = enclosingClass;
+
+        return null;
+    }
+
+    @Override
+    public Void visitGetExpression(Expression.Get expression) {
+        resolve(expression.Object);
+        return null;
+    }
+
+    @Override
+    public Void visitSetExpression(Expression.Set expression) {
+        resolve(expression.value);
+        resolve(expression.object);
+
+        return null;
+    }
+
+    @Override
+    public Void visitThisExpression(Expression.This expression) {
+
+        if (currentClass == ClassType.NONE) JLox.error(expression.keyword, "Invalid use of the 'this' keywords outside of a class.");
+
+        resolveLocal(expression,expression.keyword);
+        return null;
+    }
+
 }
+
