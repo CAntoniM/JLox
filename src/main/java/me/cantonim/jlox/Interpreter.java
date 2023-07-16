@@ -1,6 +1,8 @@
 package me.cantonim.jlox;
 
+import java.util.Map;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import me.cantonim.jlox.Expression.Assign;
@@ -23,6 +25,7 @@ public class Interpreter implements Expression.Visitor<Object>, Statement.Visito
 
     final Enviroment globals = new Enviroment();
     private Enviroment environment = globals;
+    private final Map<Expression,Integer> locals = new HashMap<>();
 
     public Interpreter() {
         globals.define("clock", new LoxCallable() {
@@ -186,15 +189,33 @@ public class Interpreter implements Expression.Visitor<Object>, Statement.Visito
         return null;
     }
 
+    private Object lookUpVariable(Token name, Expression expression) {
+        Integer distance = locals.get(expression);
+
+        if (distance != null) {
+            return environment.getAt(distance, name.lexeme);
+        } else {
+            return globals.get(name);
+        }
+    }
+
     @Override
     public Object visitVariableExpression(me.cantonim.jlox.Expression.Variable expression) {
-        return environment.get(expression.name);
+        return lookUpVariable(expression.name, expression);
     }
 
     @Override
     public Object visitAssignExpression(Assign expression) {
         Object value = evaluate(expression.value);
-        environment.assign(expression.name, value);
+
+        Integer distance = locals.get(expression);
+
+        if (distance != null) {
+            environment.assignAt(distance, expression.name, value);
+        } else {
+            globals.assign(expression.name, value);
+        }
+
         return value;
     }
 
@@ -291,4 +312,8 @@ public class Interpreter implements Expression.Visitor<Object>, Statement.Visito
         throw new me.cantonim.jlox.Return(value);
     }
 
+    public void resolve(Expression expression, int depth) {
+
+        locals.put(expression, depth);
+    }
 }
